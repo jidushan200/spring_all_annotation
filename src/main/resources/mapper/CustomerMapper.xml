@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    #接口的映射文件:
+        1.设置接口和配置文件的映射关系:
+            namespace: 产生映射关系的接口文件
+        2.作用:
+            给对应接口方法配置SQL语句(目的:
+               给接口的实现类提供实现方法——实现方法也是重写方法)
+-->
+<mapper namespace="com.hong.project.mapper.CustomerMapper">
+    <resultMap id="customerResultMap" type="com.hong.project.pojo.Customer" autoMapping="true">
+        <id property="custId" jdbcType="INTEGER" column="cust_id"/>
+        <result property="custName" jdbcType="VARCHAR" column="cust_name"/>
+        <result property="custSource" jdbcType="VARCHAR" column="cust_source"/>
+        <result property="custIndustry" jdbcType="VARCHAR" column="cust_industry"/>
+        <result property="custLevel" jdbcType="VARCHAR" column="cust_level"/>
+        <result property="custAddress" jdbcType="VARCHAR" column="cust_address"/>
+        <result property="custPhone" jdbcType="VARCHAR" column="cust_phone"/>
+    </resultMap>
+    <select id="findAll" resultMap="customerResultMap">
+        select * from customer
+    </select>
+
+    <insert id="saveCustomer" parameterType="com.hong.project.pojo.Customer">
+        INSERT INTO `base_spring_all`.`customer`
+        (`cust_name`, `cust_source`, `cust_industry`,
+         `cust_level`, `cust_address`, `cust_phone`,
+          `cust_create_time`) VALUES
+          (#{custName}, #{custSource},#{custIndustry},
+           #{custLevel}, #{custAddress}, #{custPhone}, #{custCreateTime})
+    </insert>
+
+    <delete id="deleteCustomer" parameterType="Integer">
+        DELETE FROM `base_spring_all`.`customer`
+        WHERE `cust_id` = #{custId}
+    </delete>
+
+    <update id="updateCusTomerByCustId" parameterType="com.hong.project.pojo.Customer">
+        update `customer`
+        <set>
+            <if test="custName!=null">
+                cust_name =#{custName},
+            </if>
+            <if test="custSource!=null">
+                cust_source =#{custSource},
+            </if>
+            <if test="custIndustry!=null">
+                cust_industry =#{custIndustry},
+            </if>
+            <if test="custLevel!=null">
+                cust_level =#{custLevel},
+            </if>
+            <if test="custAddress!=null">
+                cust_address =#{custAddress},
+            </if>
+            <if test="custPhone!=null">
+                cust_phone =#{custPhone},
+            </if>
+        </set>
+        where cust_id =#{custId}
+    </update>
+
+    <select id="findCustomerByCustId" resultMap="customerResultMap" resultType="com.hong.project.pojo.Customer">
+        select * from customer where cust_id = #{custId}
+    </select>
+</mapper>
+
